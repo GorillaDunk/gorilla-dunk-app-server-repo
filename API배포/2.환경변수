@@ -1,0 +1,28 @@
+환경변수: 실행되고 있는 프로그램이 참조할 수 있는, 현재 실행 환경에서 제공되는 변수들 의미
+
+- 환경변수를 설정하고 프로그램을 실행한 뒤에 설정된 환경변수의 값을 코드에 읽어오는 방법ㅂ
+
+ex)
+node app.js가 아니라
+ID=codeitTeacher PASSWORD=hello123 node app.js 와 같이 작성하게되면 
+실행될 프로그램에서는 이제 ID와 PASSWORD라는 환경변수를 참조할 수 있게된다. 
+
+이러한 환경 변수의 값을 가져오는 코드는
+ process.env.ID
+ process.env.PASSWORD
+
+ - process라는 객체의 env 객체에서 환경변수의 값들을 찾는것이다. 
+
+ 만약 node app.js로 실행하면 이 환경 변수의 값을 가져오는 코드들이 nul값을 가져오게된다. 
+
+ 하지만 ID와 PASSWORD를 넣어주고 node app.js를 실행하게되면 
+ 환경변수 값들을 불러올 때 지정한 값들이 잘 출력된다. 
+
+ 
+
+
+
+
+
+
+

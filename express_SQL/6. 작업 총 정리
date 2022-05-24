@@ -1,0 +1,74 @@
+지금까지 
+
+JS 코드상의 Member모델과 
+COWORK 데이터베이스에 있는 Members테이블을 연동하기 위한 잡을 순차적으로 진행
+이 작업들을 정리해보자. 
+
+1. MySQL 서버 설치 및 MySQL 서버 실행한 상태로 두기
+2. Sequelize를 사용하기 위해 필요한 패키지 설치 
+-> npm install mysql2 sequelize sequelize-cli
+*sequqelize-cli는 Sequqelize로 DB작업을 하기 위한 필수 요건은 아니지만 이 패키지가 제공하는 다양한 명령어를
+사용해서 프로젝틀 세팅하는게 좋다. 
+
+3. Sequelize를 사용하는 프로젝트의 이상적인 구조를 만들기 위해 필요한 디렉토리 및 파일 생성
+-> npx sequelize init
+이를 통해서 
+  *config, migrations, models, seeders 디렉토리 생성
+  *config/config.json 파일 생성
+  *models/index.js 파일 생성
+
+4. config.json 파일 중 development 객체의 MySQL 서버 접속 정보 설정
+
+development: {
+  username:'root',
+  password: '123123123',
+  database: 'COWORK',
+  host:'127.0.0.1',
+  dialect: 'mysql',
+},
+
+5. COWORK 데이터베이스 생성
+npx sequelize db:create --env development
+* config.json 파일의 development 객체의 내용대로 MySQL 서버에 접속하여 COWORK 데이터베이스를 생성함
+* --env development 옵션을 주지 않아도 기보능로 development 옵션이 적용되기 때문에 생략 가능
+
+6. Members 테이블 생성 마이그레이션 파일 및 Member 모델 파일 생성
+npx sequelize model:generate --name Member --attributes name:string,team:string,position:string,.....
+
+* migration 디렉토리에 (생성일자 및 시가)-creatae-member.js파일이 생성된다. -> 데이터베이스에 Members 테이블을 생성하는 코드가 담겨있는 파일이다. 
+* models 디렉토리에 member.js파일이 생서됨(나중에 Members 테이블을 제어하기 위해 연동해서 이용할 Member 모델의 코드가 담겨있다. ) 
+* id 프로퍼티(컬럼)를 sequelize-cli가 자동으로 코드에 추가해줌
+* (생성일자 및 시간)-create-members.js 파일에서 createAt,updatedAt 프로퍼티에 defaultValue속성 주기
+
+7. 데이터베이스에 Members 테이블 생성
+npx sequelize db:migrate
+* migrations 디렉토리에 있는 모든 마이그레이션 파일들의 내용을 파일명에 있는 '생성일자 및 시간'순서대로 수행하는 명령, 
+현재는 6번에서 생성된 마이그레이션 파일 하나만 있기 때문에 해당 파일의 내용만 수행
+
+
+8. Members 테이블에 넣을 seed 데이터 생성
+npx sequelize seed:generate --name initialMembers
+
+* Members 테이블에 넣을 seed 데이터 삽입 코드가 있는 initialMembers라는 이름의 파일을 생성
+* (생성일자 및 시간)-initialMembers.js 파일이 생성됨
+* 코드에 실제로 넣을 seed데이터에 해당하는 JSON형식의 직원 정보 배열 추가
+
+9. Members 테이블에 Seed 데이터 추가 
+npx sequelize db:seed:all
+
+10. Member 모델 코드가 빠져있는 id프로퍼티 추가 
+class Member extends Model{}
+Member.init(
+  {
+    id:{
+      allowNull:false,
+      autoIncrement:true,
+      primaryKEy: true,
+      type: DataTypes,INTEGEr,
+    },
+  }
+)
+
+
+
+

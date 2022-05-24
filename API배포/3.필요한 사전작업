@@ -1,0 +1,56 @@
+Heroku는 이미 준비된 DB를 가져다가 쓰면된다. 
+
+1. 화면에서 Resource를 클릭
+2. Add-ons라는 부분에 mysql이라고 검색 --> ClearDB MySQL을 클릭
+3. ClearDB mySQL은 무료와 유료 모두를 제공하는데 그런 이유로 신용카드를 등록시켜줘야한다.
+4. 등록시킨후 ClearDB MySql 아이콘을 클릭하면 DB가 다른 서베에 등록이되어있는걸 볼 수 있다. 
+5. 이후 resource탭이 있었던 자리의 맨 오른쪽 settings에 들어간다.
+6. settings에 들어가면 아래에 Reveal Config Vars라는 녀석이 있다. 
+7. Reaveal Config Vars 버튼을 클리갛면 CLEARDB_DATABSE_URL부분을 볼 수 있다. 
+8. 여기에는 나중에 실행될 우리의 코드가 참조할 수 있는 데이터를 기입할 수 있다. 
+9.보면 CLEARDB_CATABASE_URL부분은 환경변수의 이름 오른쪽은 환경변수의 값이다. 
+10. CLEARDB의 값은 방금전에 생성했던 mySql에 접근할 수 있는 url을 그 값으로 가지고 있다. 
+11. 그 값인 전체 URL은 사용자 이름, 비밀번호, 호스트 주소, 데이터베이스의 이름이 들어있따. 
+12. 웹사이트 Vinfig Vars 부분에 key와 value값들 넣어주기.
+ex)
+CLEARDB_DATABASE_URL    mysql://b67afad3c3b127:8c76042f@us-cdbr-east-05.cleardb.net/heroku_33541a2df512890?reconnect=true
+DB-USERNAME             b67afad3c3b127
+DB_PASSWORD             8c76042f
+HOST                    us-cdbr-east-05.cleardb.net
+DB                      heroku_33541a2df512890
+
+Heroku는 앞으로 이 환경변수들을 자동으로 설정하고 우리의 코드를 실행할것
+우리는 이런 환경변수들을 읽어와야한다. 
+
+13. config.jason파일로 가보자. 
+14. 이 config.jason파일을 config.js로 파일명을 바꿔준다.
+-jason파일은 코드를 작성할 수 없기 때문에 js파일로 확장자를 바꿔줘야 코드로 환경변수들을 가져올 수 있다. 
+- js파일로 바꾸고 객체를 외부로 공개하는 코드도 추가하자. (exports 추가)
+- 프로퍼티들도 따옴표로 되어있는거 따옴표 제거
+
+15. 이번에는 개발 목적이 아닌 서비스 제공 목적으로 작업을 할거기 떄문에 
+production객체를 건들어야한다. 그렇기 때문에 username, password, database의 값들을 process.env.우리가 heroku에서 설정했던 환경변수 이름
+으로 변경해줘야한다. 이렇게 해줘야 Heroku에서 자동으로 설정된 환경변수 값들을 불러올 수 있다.
+이렇게 읽어온 production객체의 값을 실제로 사용하도록 하려면 또 다른 코드를 고쳐줘야한다. 
+16. models 디렉토리의 index.js파일로 가보자
+- 이 파일을 보면 config.development를 볼 수 있다. 즉, config객체에 항상 development 객체만을 이용
+- 이제는 실제 서비스 제공 목적이기 때문에 이 부분의 코드를 바꿔줘야한다. 
+
+
+17. 이후에 package.json파일로 가자. 
+이 파일의 script 부분에 DB관련 작업 명령어 추가
+    "migrate": "sequelize db:migrate", --> mysql파일로 members 테이블을 생성할때
+    "seed": "sequelize db:seed:all" --> members 테이블에 seed 데이터를 넣을때 사용한 명령어
+    Heroku에서도 이런 작업들을 해줘야하기 때문에 미리 설정해주자. 
+
+18. app.js로 가서 port번호를 바꿔주자. 이때까지 3000를 사용했는데, 이제는 Heroku에서 넘겨주는 포트번호를 사용해야한다. 
+    3000 대신 process.env.PORT || 3000 로 대체해주자. 넘겨 받은 값이 있으면 적용시켜주고 없으면 3000을 실행하도록 한다. 
+
+
+여기까지 App을 생성하고 MySQL 데이터 베이스를 Heroku에 생성하였고 이후 환경변수를 설정 및 코드 수정을 했다. 
+
+이제 우리의 프로젝트 코드를 Heroku에 올려야하는데 이걸 바로 올릴 수 있는게 아니고 GitHub를 통해서 올려야한다. 
+
+
+
+

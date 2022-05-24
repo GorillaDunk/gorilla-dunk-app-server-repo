@@ -1,0 +1,48 @@
+Sequelize                 COWORK Database
+하나의 class <------------- Table
+class의 객체 <------------- 하나의 row
+
+
+sequeliz-cli를 이용해서 memberclass를 생성해보자
+
+* model: 하나의 테이블에 대응되는 하나의 클래스를 의미
+              model을 생성할거야,  그리고 그 모델의 이름을 Member라고 할거야, 이후 속성들 나열
+npx sequelize model:generate --name Member --attributes
+name:string,team:string,position:string,emailAddress:string,
+phoneNumber:string,admissionDate:date,birthday:date,profileImage:string
+
+* 속성들 중에서 id속성이 보이지 않는다. 이유: sequelize에서 기본으로 생성해주는 녀석이기 때문이다. 
+
+이 명령어를 실행하면 migrations폴더에는 테이블을 생성한 날짜와함께 파일이 만들어지고 models에도 members.js라는 파일이 추가가된다. 
+
+migration 폴더의미: 데이터베이스 내부에서 일어나는 모든 변경사항을 의미한다. ex)테이블 생성, 컬럼 추가 등등...
+내부를 보면 어떤 객체 하나를 외부로 공개하고 있는걸 볼 수 있다. 
+크게 up과 down이라는 메소드로 나뉘어지는걸 볼 수 있다. 
+up 메소드: migration을 적용할때 실행
+down 메소드: migration을 적용 해제할때 실행
+일단 up메소드는 Members라는 테이블을 생성하는 메소드이다. up안에 createTable이 테이블을 생성하는 메소드이다. 
+createTable('테이블이름', {컬럼들})
+* 어? 근데 보니 터미널에 테이블 생성할 때 적었던 이름은 member였는데 여기는 members라고 나온다. 
+-> sequelize의 특징이다. 보통 테이블의 이름을 자동으로 복수로 바꿔서 정의한다. 
+ 또 더 내려가서 보면 createAt 그리고 updateAt과 같은 컬럼들이 존재함을 볼 수 있다. 이둘은 우리가 정의한게 아니지만 자동으로 생성
+이 컬럼들은 매번 시간을 넣을 필요 없도록 자동으로 현재 시간이 들어가게 설정해보자.
+
+하는 방법
+createAt: {
+  allowNull:false,
+  type: Sequelize.DATE;
+  defaultValue: Sequelize.fn('now')
+}
+UpdateAt도 defaultValue를 추가하여 똑같이 해주자. 
+
+
+migration 적용시 up메소드가 작동. migration 적용 해제시 down메소드가 작동
+dropTable은 members 테이블을 지운다느 뜻이다. 
+
+migration 적용 방법
+
+npx sequelize db:migrate 명령어 실행 -> migrate 안에 값들을 전부 적용시킨다는 뜻
+
+migration 적용 해제 방법 -> 테이블을 지우는 것
+npx sequelize db:migrate:undo
+

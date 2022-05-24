@@ -1,0 +1,38 @@
+JS를 DBMS(mysql)와 연결시키는 방법은 2가지가 있다. 
+1. JS를 SQL을 통해 클라이언트 객체에 전달하고 이 클라이언트 객체가  MYSQL에 이 SQL을 전달해주는것
+2. ORM을 이용해서 JS의 자바스크립트롤 작성된거를 클라이언트 객체에 전달하고 그것을 ORM이 SQL로 바꾸어 MYSQL에 전달하는 방법
+
+
+ORM(Object-Relational Mapping): 데이터베이스에 있는 데이터를 하나의 객체에 매핑시키는 기술
+
+
+ex) vehicle.color = 'blue'; 라는 값을 orm을 통해서 ORM에 전달하게되면
+ORM은 자동으로 UPDATE vehicles SET color ='blue' WHERE 'id'=1;로 변환시켜 mysql에 전달하게된다.
+
+연동시키기 위해서는
+1. mysql2라는 패키지가 필요하다. 
+mysql2는 클라이언트 객체를 제공하는 패키지이다.
+
+2. sequelize 패키지: ORM 패키지의 여러 종류 중 하나이다.
+
+3. sequelize-cli: 데이터베이스 관련작업을 sequelize와 연동해서 터미널에서 직접
+명령어로 수행할 수 있게 해주는 패키지이다. 
+
+위의 3가지를 npm install mysql2 sequelize sequelize-cli 명령어를 사용해서 다운받기
+npx sequelize init 명령어를 실행 -> config, migrations, models, seeders등의 폴더들이 생성된다. 
+
+
+1. config: configuration의 줄임말로 데이터베이스 접근에 관한 각종 설정들이 들어있다.
+
+config 폴더 안에 config.json파일을 들어가보면
+development, test, production 이렇게 3가지 섹션으로 나뉘어져있는걸 볼 수 있다. 
+이렇게 3가지로 나뉘는 이유는 개발을 할때 
+개발을 하기위한 DB, test를 하기위한 DB, 제품 공개를 위한 DB를 따로 두어 개발하기 때문이다. 
+
+config.json안에 우리는 development객체만을 이요할것
+development 객체 안에 password를 설정해주고 Database이름을 COWORK로 수정(COWORK라는 이름을 가진 DB를 만들거임)
+db를 생성하기 위한 명령어:
+npx sequelize db:create --env development
+
+--env부분은 config.json안에 녀석들 중에서 어떤 녀석을 쓰겠냐라는 뜻이다. 우리는 development를 사용하려고 했으니 development로 설정
+위의 명령어를 실행하면 COWROK라는 DB가 생성됨을 볼 수 있다. 

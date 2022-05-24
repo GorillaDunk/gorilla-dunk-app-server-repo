@@ -1,0 +1,31 @@
+members 테이블에 데이터 넣기 
+이번에 이 테이블에 직원 정보를 넣어보자. 
+처음에 테이블에 넣는 데이터를 seed 데이터라고 부른다.
+
+seed데이터를 추가한 파일을 생성하고 그 파일의 이름이 initialMEmbers라는 뜻
+npx sequelize seed:generate --name initialMembers
+
+위의 명령어를 실행하면 seeders라는 폴더에 위에서 생성한 js파일이 생성이된다. 
+바로 여기에 있는 js파일에 seed 데이터를 넣는것. 이 파일을 seeder file이라고 부르자.
+
+이 시더파일에도 up메소드와 down메소드가 존재한다.
+up이 적용시키는것 down이 적용해제이다. 
+
+up멘소드 부분에 awiat queryInterface.bulkInsert('Members', [
+
+])
+이처럼 대괄호를 써서 배열의 형식으로 row하나하나를 객체로 직원 정보를 넣어준다. 
+
+down메소드 부분에
+await queryInterface.bulkDelete('Members', null, {});
+이 부분은 Members데이블의 모든 row를 삭제하라는 뜻이다. 
+
+
+이제 seeder파일을 적용시켜서 seed데이터를 테이블에 삽입해보자. 
+npx sequelize db:seed:all
+
+이 코드를 실행하면 seeders 디렉토리에 있는 모든 seeder파일이 적용된다. 
+이 경우 seeder파일 하나가 적용된다. 
+
+
+

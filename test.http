@@ -1,0 +1,36 @@
+GET http://localhost:3000/api/members
+
+### 
+POST http://localhost:3000/api/members
+Content-Type: application/json 
+
+{
+  "id": 11,
+  "name": "Zake",
+  "team": "Engineering",
+  "position": "Android Developer",
+  "emailAddress":"zake@google.com",
+  "phoneNumber":"010-xxxx-xxxx",
+  "admissionDate":"2021/06/12",
+  "birthdat":"1995/09/27",
+  "profileImage": "profile11.png"
+}
+
+PUT http://localhost:3000/api/members/1
+Content-Type:application/json
+
+{
+  "id": 11,
+  "name": "Zake",
+  "team": "Engineering",
+  "position": "IOS Developer",
+  "emailAddress":"zake@google.com",
+  "phoneNumber":"010-xxxx-xxxx",
+  "admissionDate":"2021/06/12",
+  "birthdat":"1995/09/27",
+  "profileImage": "profile11.png"
+
+}
+
+###
+DELETE http://localhost:3000/api/members/3
